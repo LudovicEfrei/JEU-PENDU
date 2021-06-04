@@ -1,22 +1,46 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <time.h> 
 #include "pendu.h"
 
 
 int main (int argc, char* argv[])
 {
+    int nombreMots = compteurMot();
     int i , j;
-    char motSecret[] = "MARRON";
-    char motDecouvert[] = "******";
     char caractereRecup = 0;
+    int numeroMot = tirageMot(nombreMots);
+    int nombreLettre = tailleMot(numeroMot);
+
+    //printf("%d %d\n",numeroMot, nombreLettre);
+
+    char* motSecret = NULL;
+    motSecret=malloc(nombreLettre * sizeof(char));//on crée un tableau de la taille du mot tiré au hasard
+    if (motSecret==NULL)
+    {
+        exit(0);
+    }
+
+    recupMot(numeroMot,nombreLettre,motSecret);
+    //affiche(motSecret,nombreLettre);
+
+    char* motMystere = NULL;
+    motMystere=malloc(nombreLettre * sizeof(char));
+    if (motMystere==NULL)
+    {
+        exit(0);
+    }
+
+    creerMotMystere(nombreLettre,motMystere);
+
 
     printf("Bienvenue dans le jeu du pendu\n");
 
     for (i = 0 ; i < 10 ; i++) // compteur pour le nombre de partie
     {
         printf("Il vous reste %d coups\n", 10-i);
-        printf("Quel est le mot secret ? %s\n",motDecouvert);
+        printf("Quel est le mot secret ? %s\n",motMystere);
         caractereRecup = recupCaract();
         //ici on recupère le caractere via une fonction qui va en plus vider le buffer et passer le caracter en majuscule
 
@@ -26,12 +50,13 @@ int main (int argc, char* argv[])
             if (motSecret[j] == caractereRecup)
             // Si la caractere saisi est dans le motsecret alors on l'affiche 
             {
-                motDecouvert[j] = caractereRecup;
+                motMystere[j] = caractereRecup;
+                i--;
             }
         }
-        printf("%s\n",motDecouvert);
+        printf("%s\n",motMystere);
 
-        if (verification(motDecouvert))
+        if (verification(motMystere))
         //cette fonction regarde s'il reste des caractere non trouvé '*' dans le mot et retourne 1 si non
         {
             printf("Vous avez gagné !\n");
@@ -39,6 +64,7 @@ int main (int argc, char* argv[])
         }
     }
 
-    
+    free(motSecret);
+    free(motMystere);
     return 0;
 }

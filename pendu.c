@@ -64,6 +64,10 @@ int main (int argc, char* argv[])
         }
     }
 
+    printf("Vous avez perdu, le mot mystère était : ");
+    affiche(motSecret,nombreLettre);
+    printf("\n");
+
     free(motSecret);
     free(motMystere);
     return 0;
